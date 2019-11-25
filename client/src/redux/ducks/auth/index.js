@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux"
 import axios from "axios"
-import { resolve } from "path"
+import socket from "../../../lib/socket"
 
 //action def
 const LOGIN_PENDING = "auth/LOGIN_PENDING"
@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
         username: action.payload
       }
     case LOGIN_FAILURE:
-      return { ...state, loading: false, isAuthenticated: false, usename: "" }
+      return { ...state, loading: false, isAuthenticated: false, username: "" }
     case LOGOUT:
       return initialState
     default:
@@ -38,25 +38,44 @@ export default (state = initialState, action) => {
 
 //action creators
 
-function login(username, password) {
-  return dispatch => {
+function login(username, password, dispatch) {
+  return new Promise((resolve, reject) => {
     axios
       .post("/login", { username, password })
       .then(resp => {
+        console.log(resp.data.token)
         axios.defaults.headers.common = {
-          Authorization: `Bearer${resp.data.token}`
+          Authorization: `Bearer ${resp.data.token}`
         }
         dispatch({
           type: LOGIN_SUCCESS,
           payload: username
         })
+        socket.emit("login", username)
+        resolve()
       })
       .catch(e => {
         dispatch({
           type: LOGIN_FAILURE
         })
+        reject()
       })
-  }
+  })
+}
+
+function register(username, password, dispatch) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post("/register", { username, password })
+      .then(resp => {
+        login(username, password, dispatch).then(() => {
+          resolve()
+        })
+      })
+      .catch(e => {
+        reject()
+      })
+  })
 }
 
 function logout() {
@@ -68,11 +87,17 @@ function logout() {
 
 export function useAuth() {
   const username = useSelector(appState => appState.authState.username)
+  const isAuthenticated = useSelector(
+    appState => appState.authState.isAuthenticated
+  )
   const dispatch = useDispatch()
-  const signin = (username, password) => {
+  const signin = (u, p) => {
     dispatch({ type: LOGIN_PENDING })
-    dispatch(login(username, password))
+    return login(u, p, dispatch)
   }
-  const signout = () => ({ type: LOGOUT })
-  return { username, signin, signout }
+  const reg = (username, password) => {
+    return register(username, password, dispatch)
+  }
+  const signout = () => dispatch(logout())
+  return { isAuthenticated, username, signin, signout, reg }
 }

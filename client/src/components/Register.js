@@ -2,22 +2,20 @@ import React, { useState } from "react"
 import { useAuth } from "../hooks"
 import { Link } from "react-router-dom"
 import "../styles/main.css"
-import "../styles/base.css"
 
 export default props => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const { signin } = useAuth()
+  const { reg } = useAuth()
 
   function handleSubmit(e) {
     e.preventDefault()
 
-    signin(username, password)
-      .then(resp => {
-        props.history.push("/")
-      })
-      .catch(e => {})
+    reg(username, password).then(resp => {
+      props.history.push("/")
+    })
+    // .catch(e => {})
   }
   return (
     <div className="mainLog">
@@ -42,7 +40,7 @@ export default props => {
           Login
         </button>
       </form>
-      <Link to="/register">New User? Register Here!</Link>
+      <Link to="/login">Already A User? Log In!</Link>
     </div>
   )
 }

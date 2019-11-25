@@ -1,0 +1,79 @@
+html {
+  box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  font-family: monospace;
+}
+.mainLog {
+  text-align: center;
+  margin-top: 20%;
+}
+input {
+  font-size: 15px;
+  border-radius: 12px;
+  border: dotted #ccc 2px;
+  width: 150px;
+  height: 56px;
+  margin: 21px;
+}
+#chat {
+  display: flex;
+}
+#users {
+  border-right: 2px dotted rgb(138, 138, 138);
+}
+body {
+  background: rgb(138, 207, 138);
+  margin: auto;
+}
+h1 {
+  margin: auto;
+}
+a {
+  text-decoration: none;
+
+  text-decoration: rgb(88, 69, 102);
+}
+.chatMain {
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+  margin: auto;
+  width: 75%;
+}
+#signOut {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+  align-self: flex-end;
+}
+#text {
+  align-self: center;
+  width: 500px;
+  height: 100px;
+  font-size: 20px;
+}
+#sub {
+  display: block;
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  padding: 3px;
+  text-decoration: none;
+}
+#users {
+  font-size: 27px;
+  text-decoration: underline;
+}
+.msg {
+  border: 1px solid rgb(89, 87, 87);
+  border-radius: 25px;
+  color: rgb(96, 96, 238);
+  font-size: 21px;
+  padding: 8px;
+}
